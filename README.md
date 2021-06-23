@@ -1,2 +1,5 @@
 # cube
 Cube
+
+# Dependencias
+- `NumPy`
