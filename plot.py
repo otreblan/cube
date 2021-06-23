@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import sys
 
 
-# TODO Esto debería leer un cuaternión y dibujarlo.
+# TODO Esto debería leer un ángulo de euler y dibujarlo.
 def updatePlot(data: str) -> None:
     print(data, end='')
 
