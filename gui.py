@@ -7,12 +7,25 @@ from typing import List, Tuple, Any
 import matplotlib.pyplot as plt
 import numpy as np
 
+def side_edge(side: int) -> List[Tuple[int, int]]:
+    offset = side*4
+
+    return [(e[0]+offset, e[1]+offset) for e in [
+        (0, 1),
+        (1, 2),
+        (2, 3),
+        (3, 0),
+    ]]
+
+edges: List[Tuple[int, int]] = [e for s in range(6) for e in side_edge(s)]
+
 def plot_vertex(data: List[Vector3]) -> None:
     for vertex in data:
         plt.plot(vertex.x, vertex.y, 'bo')
 
 def plot_edges(data: List[Tuple[Vector3, Vector3]]) -> None:
-    print(data)
+    for edge in data:
+        plt.plot([v.x for v in edge], [v.y for v in edge])
 
 
 def rotate(data: List[Vector3], rotation: np.ndarray) -> List[Vector3]:
@@ -33,7 +46,8 @@ def plot_cube(cube: Tuple[np.ndarray, Any], rotation: Vector3) -> None:
     # Vértices
     plot_vertex(rotated)
 
-    # TODO Aristas
+    # Aristas
+    plot_edges([(rotated[i[0]], rotated[i[1]]) for i in edges])
 
 def update_plot(data: Vector3) -> None:
     plot_cube(geometry.create_cube(), data)
