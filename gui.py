@@ -73,7 +73,7 @@ def plot_cube(cube: Tuple[np.ndarray, Any], rotation: Vector3):
         for v in cube[0]
     ]
 
-    text: str = "(x={:.0f}°, y={:.0f}°, z={:.0f}°)"\
+    text: str = "Orientación: (x={:.0f}°, y={:.0f}°, z={:.0f}°)"\
     .format(
         degrees(rotation.x)%360,
         degrees(rotation.y)%360,
@@ -81,7 +81,7 @@ def plot_cube(cube: Tuple[np.ndarray, Any], rotation: Vector3):
     )
 
     # Vértices
-    return [plot_vertex(projected), ax.text(0.5, -2, text)] + \
+    return [plot_vertex(projected), ax.text(-2, 2, text)] + \
     plot_edges([(projected[i[0]], projected[i[1]]) for i in edges])
 
 def update_plot(data: Vector3):
