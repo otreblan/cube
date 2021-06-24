@@ -55,6 +55,9 @@ def update_plot(data: Vector3) -> None:
     plt.clf()
     plot_cube(geometry.create_cube(), data)
 
+    plt.axis('equal')
+    plt.axis([-1,1,-1,1])
+
 
 def get_rotation():
     for line in stdin:
