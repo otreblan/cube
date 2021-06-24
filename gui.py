@@ -11,7 +11,9 @@ import numpy as np
 plt.axis('equal')
 
 fig = plt.figure()
-ax = plt.axes(xlim=(-3,3), ylim=(-3,3))
+ax = plt.axes(xlim=(-10,10), ylim=(-10,10))
+ax.axis('equal')
+ax.axis([-10,10,-10,10])
 
 vs, = ax.plot([], [], 'bo')
 
