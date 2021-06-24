@@ -15,7 +15,15 @@ ax = plt.axes(xlim=(-10,10), ylim=(-10,10))
 ax.axis('equal')
 ax.axis([-10,10,-10,10])
 
+def init_edges():
+    r = []
+    for edge in range(24):
+        edge_a, = ax.plot([], [])
+        r.append(edge_a)
+    return r
+
 vs, = ax.plot([], [], 'bo')
+es = init_edges()
 
 def side_edge(side: int) -> List[Tuple[int, int]]:
     offset = side*4
@@ -34,12 +42,11 @@ def plot_vertex(data: List[np.ndarray]):
     return vs
 
 def plot_edges(data: List[Tuple[np.ndarray, np.ndarray]]):
-    r = []
+    i = 0
     for edge in data:
-        edge_a, = ax.plot([], [], 'r')
-        edge_a.set_data([v[0] for v in edge], [v[1] for v in edge])
-        r.append(edge_a)
-    return r
+        es[i].set_data([v[0] for v in edge], [v[1] for v in edge])
+        i = i+1
+    return es
 
 def plot_cube(cube: Tuple[np.ndarray, Any], rotation: Vector3):
     rot_mat = matrix44.create_from_eulers(rotation)
