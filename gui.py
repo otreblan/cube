@@ -2,8 +2,7 @@
 
 from sys import stdin
 from matplotlib import animation
-from numpy.ma import repeat
-from pyrr import Vector3, geometry, matrix33
+from pyrr import Vector3, Vector4, geometry, matrix33, matrix44
 from typing import List, Tuple, Any
 
 import matplotlib.pyplot as plt
@@ -36,27 +35,63 @@ def rotate(data: List[Vector3], rotation: np.ndarray) -> List[Vector3]:
         for v in data
     ]
 
+def view(data: List[Vector3], mat: np.ndarray) -> List[Vector4]:
+    return [
+        Vector4(
+            matrix44.apply_to_vector(
+                vec=Vector4.from_vector3(v), mat=mat
+            )
+        )
+        for v in data
+    ]
+
+def project(data: List[Vector4], projection: np.ndarray) -> List[Vector3]:
+    #return data
+    return [
+        Vector3.from_vector4(Vector4(
+            matrix44.apply_to_vector(
+                vec=v, mat=projection
+            )
+        ))[0]
+        for v in data
+    ]
+
 
 def plot_cube(cube: Tuple[np.ndarray, Any], rotation: Vector3) -> None:
     rot_mat = matrix33.create_from_eulers(rotation)
+    view_mat = matrix44.create_look_at(
+        eye=Vector3([-10,0,0]),
+        target=Vector3([0,0,0]),
+        up=Vector3([0,1,0])
+    )
+    pro_mat = matrix44.create_perspective_projection(
+        fovy=20,
+        aspect=1,
+        near=0.01,
+        far=10
+    )
 
     # Rotación
     rotated = rotate([Vector3(v) for v in cube[0]], rot_mat)
 
-    # TODO Proyección
+    # View
+    viewed = view(rotated, view_mat)
+
+    # Proyección
+    projected = project(viewed, pro_mat)
 
     # Vértices
-    plot_vertex(rotated)
+    plot_vertex(projected)
 
     # Aristas
-    plot_edges([(rotated[i[0]], rotated[i[1]]) for i in edges])
+    plot_edges([(projected[i[0]], projected[i[1]]) for i in edges])
 
 def update_plot(data: Vector3) -> None:
     plt.clf()
     plot_cube(geometry.create_cube(), data)
 
     plt.axis('equal')
-    plt.axis([-1,1,-1,1])
+    plt.axis([-10,10,-10,10])
 
 
 def get_rotation():
