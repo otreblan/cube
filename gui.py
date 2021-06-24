@@ -78,7 +78,10 @@ def main() -> None:
         fig,
         func=update_plot,
         frames=get_rotation,
-        repeat=False
+        repeat=False,
+        interval=1,
+        save_count=0,
+        cache_frame_data=False
     )
 
     plt.show()
