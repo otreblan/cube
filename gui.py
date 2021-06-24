@@ -20,65 +20,37 @@ def side_edge(side: int) -> List[Tuple[int, int]]:
 
 edges: List[Tuple[int, int]] = [e for s in range(6) for e in side_edge(s)]
 
-def plot_vertex(data: List[Vector3]) -> None:
+def plot_vertex(data: List[np.ndarray]) -> None:
     for vertex in data:
-        plt.plot(vertex.x, vertex.y, 'bo')
+        plt.plot(vertex[0], vertex[1], 'bo')
 
-def plot_edges(data: List[Tuple[Vector3, Vector3]]) -> None:
+def plot_edges(data: List[Tuple[np.ndarray, np.ndarray]]) -> None:
     for edge in data:
-        plt.plot([v.x for v in edge], [v.y for v in edge])
-
-
-def rotate(data: List[Vector3], rotation: np.ndarray) -> List[Vector3]:
-    return [
-        Vector3(matrix33.apply_to_vector(vec=v, mat=rotation))
-        for v in data
-    ]
-
-def view(data: List[Vector3], mat: np.ndarray) -> List[Vector4]:
-    return [
-        Vector4(
-            matrix44.apply_to_vector(
-                vec=Vector4.from_vector3(v), mat=mat
-            )
-        )
-        for v in data
-    ]
-
-def project(data: List[Vector4], projection: np.ndarray) -> List[Vector3]:
-    #return data
-    return [
-        Vector3.from_vector4(Vector4(
-            matrix44.apply_to_vector(
-                vec=v, mat=projection
-            )
-        ))[0]
-        for v in data
-    ]
-
+        plt.plot([v[0] for v in edge], [v[1] for v in edge])
 
 def plot_cube(cube: Tuple[np.ndarray, Any], rotation: Vector3) -> None:
-    rot_mat = matrix33.create_from_eulers(rotation)
+    rot_mat = matrix44.create_from_eulers(rotation)
     view_mat = matrix44.create_look_at(
-        eye=Vector3([-10,0,0]),
+        eye=Vector3([-2,0,0]),
         target=Vector3([0,0,0]),
         up=Vector3([0,1,0])
     )
     pro_mat = matrix44.create_perspective_projection(
-        fovy=20,
+        fovy=40,
         aspect=1,
         near=0.01,
         far=10
     )
 
-    # Rotación
-    rotated = rotate([Vector3(v) for v in cube[0]], rot_mat)
-
-    # View
-    viewed = view(rotated, view_mat)
-
     # Proyección
-    projected = project(viewed, pro_mat)
+    projected = [
+        matrix44.apply_to_vector(mat=pro_mat, vec=
+            matrix44.apply_to_vector(mat=view_mat, vec=
+                matrix44.apply_to_vector(mat=rot_mat, vec=v)
+            )
+        )
+        for v in cube[0]
+    ]
 
     # Vértices
     plot_vertex(projected)
@@ -91,7 +63,7 @@ def update_plot(data: Vector3) -> None:
     plot_cube(geometry.create_cube(), data)
 
     plt.axis('equal')
-    plt.axis([-10,10,-10,10])
+    plt.axis([-3,3,-3,3])
 
 
 def get_rotation():
