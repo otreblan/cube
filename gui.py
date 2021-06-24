@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-from sys import stdin
+from math import degrees
 from matplotlib import animation
 from pyrr import Vector3, geometry, matrix44
+from sys import stdin
 from typing import List, Tuple, Any
 
 import matplotlib.pyplot as plt
@@ -72,8 +73,16 @@ def plot_cube(cube: Tuple[np.ndarray, Any], rotation: Vector3):
         for v in cube[0]
     ]
 
+    text: str = "(x={:.0f}°, y={:.0f}°, z={:.0f}°)"\
+    .format(
+        degrees(rotation.x)%360,
+        degrees(rotation.y)%360,
+        degrees(rotation.z)%360
+    )
+
     # Vértices
-    return [plot_vertex(projected)] + plot_edges([(projected[i[0]], projected[i[1]]) for i in edges])
+    return [plot_vertex(projected), ax.text(0.5, -2, text)] + \
+    plot_edges([(projected[i[0]], projected[i[1]]) for i in edges])
 
 def update_plot(data: Vector3):
     #plt.clf()
