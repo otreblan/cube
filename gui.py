@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
+from pyrr import Vector3
+
 import numpy as np
 import sys
 
 
 # TODO Esto debería leer un ángulo de euler y dibujarlo.
-def updatePlot(data: np.ndarray) -> None:
+def updatePlot(data: Vector3) -> None:
     print(data, end='')
 
 
