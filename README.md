@@ -5,5 +5,4 @@ Cube
 - `NumPy`
 - `pyrr`
 
-
-https://user-images.githubusercontent.com/39320840/123332684-74247b00-d506-11eb-9c58-1c6b129436c6.mp4
+https://user-images.githubusercontent.com/39320840/123335339-eea2ca00-d509-11eb-94c9-1b8d7a952d9f.mp4
