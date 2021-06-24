@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from sys import stdin
+from matplotlib import animation
+from numpy.ma import repeat
 from pyrr import Vector3, geometry, matrix33
 from typing import List, Tuple, Any
 
@@ -50,13 +52,26 @@ def plot_cube(cube: Tuple[np.ndarray, Any], rotation: Vector3) -> None:
     plot_edges([(rotated[i[0]], rotated[i[1]]) for i in edges])
 
 def update_plot(data: Vector3) -> None:
+    plt.clf()
     plot_cube(geometry.create_cube(), data)
 
-    plt.show()
+
+def get_rotation():
+    for line in stdin:
+        yield Vector3(np.fromstring(line, count = 3, sep=','))
+
 
 def main() -> None:
-    for line in stdin:
-        update_plot(Vector3(np.fromstring(line, count = 3, sep=',')))
+    fig = plt.figure()
+
+    anim = animation.FuncAnimation(
+        fig,
+        func=update_plot,
+        frames=get_rotation,
+        repeat=False
+    )
+
+    plt.show()
 
 
 if __name__ == '__main__':
